@@ -1,0 +1,44 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# build
+dist/
+build/
+
+# environment
+.env
+.env.local
+.env.*.local
+
+# logs
+*.log
+logs/
+
+# runtime
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# docker
+docker-compose.override.yml
+
+# testing
+coverage/
+htmlcov/
+.pytest_cache/
+backend/.env
