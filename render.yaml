@@ -3,7 +3,7 @@ services:
     name: studentpath-backend
     runtime: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app.main:app -w 4 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:$PORT
+    startCommand: gunicorn app.main:app -w 2 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:$PORT
     envVars:
       - key: DATABASE_URL
         sync: false
@@ -14,13 +14,4 @@ services:
       - key: ENVIRONMENT
         value: production
     healthCheckPath: /api/v1/health
-
-  - type: web
-    name: studentpath-frontend
-    runtime: static
-    buildCommand: npm install && npm run build
-    staticPublishPath: ./dist
-    routes:
-      - type: rewrite
-        source: /api/*
-        destination: https://studentpath-backend.onrender.com/api/*
+    plan: free
