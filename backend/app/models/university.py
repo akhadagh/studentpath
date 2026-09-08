@@ -14,6 +14,7 @@ class University(Base):
     ownership_type = Column(String(50), nullable=True)
     region = Column(String(100), nullable=True)
     city = Column(String(100), nullable=True)
+    country = Column(String(100), nullable=True, default="Ghana")
     official_website = Column(String(500), nullable=True)
     admissions_website = Column(String(500), nullable=True)
     description = Column(Text, nullable=True)
