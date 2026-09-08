@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { FiMenu, FiX, FiChevronDown, FiBook, FiSearch, FiCheck, FiGlobe } from 'react-icons/fi';
+import { FiMenu, FiX, FiChevronDown, FiBook, FiSearch, FiCheck, FiGlobe, FiFileText, FiTarget, FiAward } from 'react-icons/fi';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -56,13 +56,15 @@ export default function Navbar() {
               )}
             </div>
 
+            <Link to="/guide" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-primary-600 hover:bg-slate-50 transition flex items-center gap-1"><FiFileText className="w-4 h-4" /> Guide</Link>
             <Link to="/about" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-primary-600 hover:bg-slate-50 transition">About</Link>
             <Link to="/contact" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-primary-600 hover:bg-slate-50 transition">Contact</Link>
 
             {user ? (
               <>
-                <Link to="/dashboard" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-primary-600 hover:bg-slate-50 transition">Dashboard</Link>
-                <Link to="/assessment" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-primary-600 hover:bg-slate-50 transition">Assessment</Link>
+                <Link to="/dashboard" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-primary-600 hover:bg-slate-50 transition flex items-center gap-1"><FiTarget className="w-4 h-4" /> Dashboard</Link>
+                <Link to="/assessment" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-primary-600 hover:bg-slate-50 transition flex items-center gap-1"><FiAward className="w-4 h-4" /> Assessment</Link>
+                <Link to="/results" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-primary-600 hover:bg-slate-50 transition flex items-center gap-1"><FiCheck className="w-4 h-4" /> Results</Link>
                 <div className="ml-2 flex items-center gap-3 pl-3 border-l border-slate-200">
                   <span className="text-sm text-slate-500">Hi, {user.full_name?.split(' ')[0]}</span>
                   <button onClick={handleLogout} className="px-3 py-1.5 text-sm text-slate-500 hover:text-red-600 transition">Logout</button>
@@ -87,12 +89,14 @@ export default function Navbar() {
             <Link to="/explore/programmes" onClick={() => setMobileOpen(false)} className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg">Programmes</Link>
             <Link to="/eligibility" onClick={() => setMobileOpen(false)} className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg">Eligibility Check</Link>
             <Link to="/explore/international" onClick={() => setMobileOpen(false)} className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg">International Schools</Link>
+            <Link to="/guide" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg"><FiFileText className="text-primary-500" /> Guide</Link>
             <Link to="/about" onClick={() => setMobileOpen(false)} className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg">About</Link>
             <Link to="/contact" onClick={() => setMobileOpen(false)} className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg">Contact</Link>
             {user ? (
               <>
-                <Link to="/dashboard" onClick={() => setMobileOpen(false)} className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg">Dashboard</Link>
-                <Link to="/assessment" onClick={() => setMobileOpen(false)} className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg">Assessment</Link>
+                <Link to="/dashboard" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg"><FiTarget className="text-primary-500" /> Dashboard</Link>
+                <Link to="/assessment" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg"><FiAward className="text-primary-500" /> Assessment</Link>
+                <Link to="/results" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg"><FiCheck className="text-primary-500" /> Results</Link>
                 <div className="border-t border-slate-200 mt-2 pt-2 px-4">
                   <span className="text-sm text-slate-500 block mb-2">Hi, {user.full_name?.split(' ')[0]}</span>
                   <button onClick={handleLogout} className="text-sm text-red-500 hover:text-red-600">Logout</button>

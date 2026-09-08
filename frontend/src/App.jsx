@@ -1,7 +1,8 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
+import BackButton from './components/layout/BackButton';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -18,9 +19,11 @@ import Admin from './pages/Admin';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import InternationalSchools from './pages/InternationalSchools';
+import Guide from './pages/Guide';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
+  const location = useLocation();
 
   if (loading) {
     return (
@@ -31,7 +34,7 @@ function ProtectedRoute({ children }) {
   }
 
   if (!user) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/login" state={{ from: location.pathname }} />;
   }
 
   return children;
@@ -42,17 +45,19 @@ function App() {
     <div className="min-h-screen flex flex-col bg-slate-50">
       <Navbar />
       <main className="flex-1">
+        <BackButton />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/guide" element={<Guide />} />
           <Route path="/explore" element={<Explore />} />
           <Route path="/explore/universities" element={<UniversityList />} />
           <Route path="/explore/universities/:id" element={<UniversityProfile />} />
           <Route path="/explore/programmes" element={<ProgrammeSearch />} />
           <Route path="/explore/programmes/:id" element={<ProgrammeDetail />} />
           <Route path="/explore/international" element={<InternationalSchools />} />
-          <Route path="/eligibility" element={<EligibilityChecker />} />
+          <Route path="/eligibility" element={<ProtectedRoute><EligibilityChecker /></ProtectedRoute>} />
           <Route path="/assessment" element={<ProtectedRoute><Assessment /></ProtectedRoute>} />
           <Route path="/results" element={<ProtectedRoute><Results /></ProtectedRoute>} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />

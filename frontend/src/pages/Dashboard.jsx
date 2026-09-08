@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
-import { FiAward, FiBookOpen, FiTarget, FiClock, FiArrowRight } from 'react-icons/fi';
+import { FiAward, FiBookOpen, FiTarget, FiClock, FiArrowRight, FiCheckCircle, FiSearch, FiGlobe, FiFileText, FiBarChart2 } from 'react-icons/fi';
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -27,12 +27,38 @@ export default function Dashboard() {
   const latestResult = results[0];
   const topMatch = latestResult?.top_matches?.[0];
 
+  const quickActions = [
+    { icon: <FiTarget className="w-5 h-5" />, title: 'Career Assessment', desc: 'Discover your career direction', link: '/assessment', color: 'bg-primary-100 text-primary-600' },
+    { icon: <FiCheckCircle className="w-5 h-5" />, title: 'Check Eligibility', desc: 'See what programmes you qualify for', link: '/eligibility', color: 'bg-green-100 text-green-600' },
+    { icon: <FiSearch className="w-5 h-5" />, title: 'Search Programmes', desc: 'Find the right programme for you', link: '/explore/programmes', color: 'bg-blue-100 text-blue-600' },
+    { icon: <FiGlobe className="w-5 h-5" />, title: 'Explore Universities', desc: 'Browse all universities', link: '/explore/universities', color: 'bg-purple-100 text-purple-600' },
+    { icon: <FiGlobe className="w-5 h-5" />, title: 'International Schools', desc: 'Explore global opportunities', link: '/explore/international', color: 'bg-amber-100 text-amber-600' },
+    { icon: <FiFileText className="w-5 h-5" />, title: 'StudentPath Guide', desc: 'Learn how to choose wisely', link: '/guide', color: 'bg-slate-100 text-slate-600' },
+  ];
+
   return (
     <div className="min-h-screen bg-slate-50">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-slate-900">Welcome back, {user?.full_name?.split(' ')[0]}</h1>
           <p className="mt-2 text-slate-600">Your personalised education dashboard</p>
+        </div>
+
+        {/* Quick Actions Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+          {quickActions.map((action, i) => (
+            <Link
+              key={i}
+              to={action.link}
+              className="bg-white rounded-xl border border-slate-200 p-5 hover:shadow-md hover:border-primary-200 transition group"
+            >
+              <div className={`w-10 h-10 rounded-lg ${action.color} flex items-center justify-center mb-3`}>
+                {action.icon}
+              </div>
+              <h3 className="font-semibold text-slate-900 group-hover:text-primary-600 transition text-sm">{action.title}</h3>
+              <p className="text-xs text-slate-500 mt-1">{action.desc}</p>
+            </Link>
+          ))}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">

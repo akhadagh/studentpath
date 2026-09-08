@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { FiArrowRight, FiTarget, FiBookOpen, FiAward, FiUsers, FiBarChart2, FiSearch, FiCheckCircle } from 'react-icons/fi'
+import { FiArrowRight, FiTarget, FiBookOpen, FiAward, FiUsers, FiBarChart2, FiSearch, FiCheckCircle, FiFileText } from 'react-icons/fi'
 
 export default function Home() {
   const steps = [
@@ -10,9 +10,9 @@ export default function Home() {
   ]
 
   const stats = [
-    { value: '16', label: 'Universities' },
+    { value: '41', label: 'Universities' },
     { value: '10+', label: 'Career Clusters' },
-    { value: '23+', label: 'Programmes' },
+    { value: '150+', label: 'Programmes' },
     { value: '100%', label: 'Free to Use' },
   ]
 
@@ -24,7 +24,7 @@ export default function Home() {
     },
     {
       title: 'University Explorer',
-      desc: 'Browse 16 Ghana universities, compare programmes, check entry requirements, and find the perfect fit for your future.',
+      desc: 'Browse 41 Ghana and international universities, compare programmes, check entry requirements, and find the perfect fit for your future.',
       img: 'https://images.pexels.com/photos/267885/pexels-photo-267885.jpeg?auto=compress&cs=tinysrgb&w=800',
     },
     {
@@ -160,6 +160,74 @@ export default function Home() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* StudentPath Guide */}
+      <section className="py-20 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="bg-gradient-to-br from-primary-700 to-primary-900 rounded-2xl p-8 md:p-12 text-white">
+            <div className="flex flex-col md:flex-row items-center gap-10">
+              <div className="flex-1">
+                <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur flex items-center justify-center mb-6">
+                  <FiFileText className="w-7 h-7" />
+                </div>
+                <h2 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">
+                  The StudentPath Guide
+                </h2>
+                <p className="text-lg text-blue-100 mb-2 leading-relaxed">
+                  A Complete, Easy-to-Understand Guide to Choosing Your Career, Programme and University
+                </p>
+                <p className="text-blue-200 text-sm mb-6">
+                  Ghana-focused &middot; Globally expandable &middot; Student-friendly &middot; Updated September 2026
+                </p>
+                <div className="grid grid-cols-2 gap-3 mb-8 text-sm">
+                  <div className="bg-white/10 rounded-xl p-3 text-center">
+                    <div className="font-bold text-white">18 Chapters</div>
+                    <div className="text-blue-200">Comprehensive guidance</div>
+                  </div>
+                  <div className="bg-white/10 rounded-xl p-3 text-center">
+                    <div className="font-bold text-white">4 Worksheets</div>
+                    <div className="text-blue-200">Practical exercises</div>
+                  </div>
+                  <div className="bg-white/10 rounded-xl p-3 text-center">
+                    <div className="font-bold text-white">5-Step Method</div>
+                    <div className="text-blue-200">Decision framework</div>
+                  </div>
+                  <div className="bg-white/10 rounded-xl p-3 text-center">
+                    <div className="font-bold text-white">Verified Sources</div>
+                    <div className="text-blue-200">Official references</div>
+                  </div>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Link
+                    to="/guide"
+                    className="bg-white text-primary-700 px-6 py-3 rounded-xl font-semibold hover:bg-blue-50 transition inline-flex items-center justify-center gap-2"
+                  >
+                    Read the Guide <FiArrowRight />
+                  </Link>
+                  <Link
+                    to="/eligibility"
+                    className="border-2 border-white/30 text-white px-6 py-3 rounded-xl font-semibold hover:bg-white/10 transition text-center"
+                  >
+                    Check Your Eligibility
+                  </Link>
+                </div>
+              </div>
+              <div className="hidden md:block flex-shrink-0">
+                <div className="bg-white/10 backdrop-blur rounded-2xl p-6 border border-white/20 max-w-xs">
+                  <h3 className="font-bold mb-3">Quick Summary</h3>
+                  <div className="space-y-2 text-sm text-blue-100">
+                    <p>1. Discover yourself — interests, strengths, goals</p>
+                    <p>2. Explore career areas and programmes</p>
+                    <p>3. Verify requirements with official sources</p>
+                    <p>4. Check your eligibility with your grades</p>
+                    <p>5. Compare options and decide with confidence</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
