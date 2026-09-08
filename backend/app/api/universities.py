@@ -12,6 +12,7 @@ from app.schemas.university import (
     UniversityResponse,
     UniversityDetailResponse,
     UniversityListResponse,
+    CampusResponse,
 )
 
 router = APIRouter()
@@ -90,8 +91,13 @@ async def get_university(
     )
     campuses = campuses_result.scalars().all()
 
+    campus_data = [
+        {"id": c.id, "campus_name": c.campus_name, "location": c.location, "city": c.city, "region": c.region}
+        for c in campuses
+    ]
+
     response = UniversityDetailResponse.model_validate(university)
-    response.campuses = campuses
+    response.campuses = [CampusResponse(**c) for c in campus_data]
     return response
 
 
