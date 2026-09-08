@@ -15,6 +15,7 @@ import UniversityProfile from './pages/UniversityProfile';
 import ProgrammeSearch from './pages/ProgrammeSearch';
 import ProgrammeDetail from './pages/ProgrammeDetail';
 import EligibilityChecker from './pages/EligibilityChecker';
+import Admin from './pages/Admin';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -54,6 +55,7 @@ function App() {
               <Route path="/assessment" element={<ProtectedRoute><Assessment /></ProtectedRoute>} />
               <Route path="/results" element={<ProtectedRoute><Results /></ProtectedRoute>} />
               <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
               <Route path="*" element={<Navigate to="/" />} />
             </Routes>
           </main>

@@ -9,7 +9,7 @@ from contextlib import asynccontextmanager
 from app.core.config import settings
 from app.core.database import engine, Base
 from app.api import auth, assessment, results, programmes
-from app.api import universities, programme_search, programme_detail, eligibility, saved
+from app.api import universities, programme_search, programme_detail, eligibility, saved, admin
 
 import app.models
 
@@ -53,6 +53,7 @@ app.include_router(programme_search.router, prefix="/api/v1/programmes", tags=["
 app.include_router(programme_detail.router, prefix="/api/v1/programmes", tags=["Programme Detail"])
 app.include_router(eligibility.router, prefix="/api/v1/eligibility", tags=["Eligibility"])
 app.include_router(saved.router, prefix="/api/v1/saved", tags=["Saved Items"])
+app.include_router(admin.router, prefix="/api/v1/admin", tags=["Admin"])
 
 
 @app.get("/api/v1/health")
