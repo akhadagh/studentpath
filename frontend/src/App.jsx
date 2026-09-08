@@ -17,6 +17,7 @@ import EligibilityChecker from './pages/EligibilityChecker';
 import Admin from './pages/Admin';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import InternationalSchools from './pages/InternationalSchools';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -50,6 +51,7 @@ function App() {
           <Route path="/explore/universities/:id" element={<UniversityProfile />} />
           <Route path="/explore/programmes" element={<ProgrammeSearch />} />
           <Route path="/explore/programmes/:id" element={<ProgrammeDetail />} />
+          <Route path="/explore/international" element={<InternationalSchools />} />
           <Route path="/eligibility" element={<EligibilityChecker />} />
           <Route path="/assessment" element={<ProtectedRoute><Assessment /></ProtectedRoute>} />
           <Route path="/results" element={<ProtectedRoute><Results /></ProtectedRoute>} />

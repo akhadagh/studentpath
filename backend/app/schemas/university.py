@@ -70,6 +70,7 @@ class UniversityListResponse(BaseModel):
     institution_type: str
     region: Optional[str]
     city: Optional[str]
+    country: Optional[str] = "Ghana"
     verification_status: Optional[str]
     programme_count: int = 0
 

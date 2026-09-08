@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { FiMenu, FiX, FiChevronDown, FiBook, FiSearch, FiCheck } from 'react-icons/fi';
+import { FiMenu, FiX, FiChevronDown, FiBook, FiSearch, FiCheck, FiGlobe } from 'react-icons/fi';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -47,6 +47,11 @@ export default function Navbar() {
                     onClick={() => setExploreOpen(false)}>
                     <FiCheck className="text-primary-500" /> Eligibility Check
                   </Link>
+                  <div className="border-t border-slate-100 my-1"></div>
+                  <Link to="/explore/international" className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition"
+                    onClick={() => setExploreOpen(false)}>
+                    <FiGlobe className="text-purple-500" /> International Schools
+                  </Link>
                 </div>
               )}
             </div>
@@ -81,6 +86,7 @@ export default function Navbar() {
             <Link to="/explore/universities" onClick={() => setMobileOpen(false)} className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg">Universities</Link>
             <Link to="/explore/programmes" onClick={() => setMobileOpen(false)} className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg">Programmes</Link>
             <Link to="/eligibility" onClick={() => setMobileOpen(false)} className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg">Eligibility Check</Link>
+            <Link to="/explore/international" onClick={() => setMobileOpen(false)} className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg">International Schools</Link>
             <Link to="/about" onClick={() => setMobileOpen(false)} className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg">About</Link>
             <Link to="/contact" onClick={() => setMobileOpen(false)} className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg">Contact</Link>
             {user ? (

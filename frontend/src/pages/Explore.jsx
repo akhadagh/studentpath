@@ -1,26 +1,33 @@
 import { Link } from 'react-router-dom';
-import { FiBook, FiSearch, FiCheck, FiGrid } from 'react-icons/fi';
+import { FiBook, FiSearch, FiCheck, FiGrid, FiGlobe } from 'react-icons/fi';
 
 export default function Explore() {
   const sections = [
     {
       icon: FiBook,
-      title: 'Explore Universities',
-      description: 'Browse verified information about universities across Ghana',
+      title: 'Ghana Universities',
+      description: 'Browse 25+ Ghanaian universities — public, private, and technical',
       link: '/explore/universities',
       color: 'from-blue-500 to-blue-600',
     },
     {
+      icon: FiGlobe,
+      title: 'International Schools',
+      description: 'Explore universities across Africa and Europe',
+      link: '/explore/international',
+      color: 'from-purple-500 to-purple-600',
+    },
+    {
       icon: FiSearch,
       title: 'Search Programmes',
-      description: 'Find programmes offered at Ghanaian universities',
+      description: 'Find 150+ programmes across all universities',
       link: '/explore/programmes',
       color: 'from-emerald-500 to-emerald-600',
     },
     {
       icon: FiCheck,
       title: 'Eligibility Checker',
-      description: 'Check if your grades meet programme requirements',
+      description: 'Check if your WASSCE grades meet programme requirements',
       link: '/eligibility',
       color: 'from-amber-500 to-amber-600',
     },
@@ -30,13 +37,13 @@ export default function Explore() {
     <div className="min-h-screen bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-slate-900 mb-4">Explore Ghana Education</h1>
+          <h1 className="text-4xl font-bold text-slate-900 mb-4">Explore Education</h1>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Discover verified information about universities, programmes, and admission requirements across Ghana
+            Discover verified information about universities, programmes, and admission requirements across Ghana and beyond
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
           {sections.map((s) => (
             <Link
               key={s.link}
@@ -59,7 +66,7 @@ export default function Explore() {
           </div>
           <div className="prose prose-slate max-w-none text-slate-600">
             <p>
-              StudentPath provides verified education information to help Ghanaian students make informed decisions about their academic future. All university and programme data is sourced from official admissions information.
+              StudentPath provides verified education information to help students make informed decisions about their academic future. All university and programme data is sourced from official admissions information.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 not-prose">
               <div className="p-4 bg-slate-50 rounded-xl">
@@ -72,16 +79,16 @@ export default function Explore() {
               <div className="p-4 bg-slate-50 rounded-xl">
                 <div className="flex items-center gap-2 text-amber-600 text-sm font-medium mb-2">
                   <span className="w-2 h-2 rounded-full bg-amber-500"></span>
-                  Regular Updates
+                  41 Universities
                 </div>
-                <p className="text-sm text-slate-500">Information reviewed and updated as new admission cycles begin</p>
+                <p className="text-sm text-slate-500">25+ Ghanaian universities, 10 African universities, 7 European universities</p>
               </div>
               <div className="p-4 bg-slate-50 rounded-xl">
                 <div className="flex items-center gap-2 text-blue-600 text-sm font-medium mb-2">
                   <span className="w-2 h-2 rounded-full bg-blue-500"></span>
                   Student-First
                 </div>
-                <p className="text-sm text-slate-500">Built to help Ghanaian students make confident education decisions</p>
+                <p className="text-sm text-slate-500">100% free platform built for every student</p>
               </div>
             </div>
           </div>

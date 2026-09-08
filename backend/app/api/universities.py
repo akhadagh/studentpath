@@ -57,6 +57,7 @@ async def list_universities(
             institution_type=uni.institution_type,
             region=uni.region,
             city=uni.city,
+            country=uni.country if hasattr(uni, 'country') else 'Ghana',
             verification_status=uni.verification_status,
             programme_count=prog_count,
         ))
