@@ -2,6 +2,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, Asyn
 from sqlalchemy.orm import DeclarativeBase
 from app.core.config import settings
 import ssl
+import re
 
 
 class Base(DeclarativeBase):
@@ -9,7 +10,7 @@ class Base(DeclarativeBase):
 
 
 DATABASE_URL = settings.DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://")
-DATABASE_URL = DATABASE_URL.replace("?sslmode=require", "").replace("&sslmode=require", "")
+DATABASE_URL = re.sub(r'\?.*$', '', DATABASE_URL)
 
 ssl_context = ssl.create_default_context()
 ssl_context.check_hostname = False
