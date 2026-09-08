@@ -13,7 +13,7 @@ services:
       - key: SECRET_KEY
         generateValue: true
       - key: CORS_ORIGINS
-        value: '["https://studentpath.vercel.app"]'
+        value: '["https://studentpath-akhadagh.vercel.app"]'
       - key: ENVIRONMENT
         value: production
     healthCheckPath: /api/v1/health
