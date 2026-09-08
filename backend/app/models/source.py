@@ -8,7 +8,7 @@ class Source(Base):
     __tablename__ = "sources"
 
     id = Column(Integer, primary_key=True, index=True)
-    university_id = Column(Integer, nullable=True)
+    university_id = Column(Integer, ForeignKey("universities.id"), nullable=True)
     title = Column(String(500), nullable=False)
     url = Column(String(1000), nullable=False)
     source_type = Column(String(50), nullable=False)
@@ -21,6 +21,8 @@ class Source(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     university = relationship("University", back_populates="sources")
+    requirements = relationship("ProgrammeRequirement", back_populates="source")
+    cut_offs = relationship("ProgrammeCutOff", back_populates="source")
 
 
 class VerificationLog(Base):

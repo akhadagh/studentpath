@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, JSON
+from sqlalchemy import Column, Integer, String, Text, DateTime, JSON, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.core.database import Base
@@ -24,7 +24,7 @@ class Career(Base):
     __tablename__ = "careers"
 
     id = Column(Integer, primary_key=True, index=True)
-    cluster_id = Column(Integer, nullable=False)
+    cluster_id = Column(Integer, ForeignKey("career_clusters.id"), nullable=False)
     name = Column(String(255), nullable=False)
     description = Column(Text, nullable=True)
     skills = Column(JSON, default=list)

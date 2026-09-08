@@ -1,29 +1,7 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, JSON, Enum as SAEnum
+from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.core.database import Base
-import enum
-
-
-class InstitutionType(str, enum.Enum):
-    PUBLIC = "public"
-    PRIVATE = "private"
-    TECHNICAL = "technical"
-    SPECIALIZED = "specialized"
-
-
-class OwnershipType(str, enum.Enum):
-    GOVERNMENT = "government"
-    PRIVATE = "private"
-    RELIGIOUS = "religious"
-    INTERNATIONAL = "international"
-
-
-class VerificationStatus(str, enum.Enum):
-    VERIFIED = "verified"
-    NEEDS_REVIEW = "needs_review"
-    PENDING = "pending"
-    OUTDATED = "outdated"
 
 
 class University(Base):
@@ -49,7 +27,7 @@ class University(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     campuses = relationship("UniversityCampus", back_populates="university", cascade="all, delete-orphan")
-    programmes = relationship("ProgrammeV2", back_populates="university", cascade="all, delete-orphan")
+    programmes = relationship("Programme", back_populates="university", cascade="all, delete-orphan")
     sources = relationship("Source", back_populates="university")
 
 
@@ -57,7 +35,7 @@ class UniversityCampus(Base):
     __tablename__ = "university_campuses"
 
     id = Column(Integer, primary_key=True, index=True)
-    university_id = Column(Integer, nullable=False)
+    university_id = Column(Integer, ForeignKey("universities.id"), nullable=False)
     campus_name = Column(String(255), nullable=False)
     location = Column(String(255), nullable=True)
     city = Column(String(100), nullable=True)
@@ -65,3 +43,4 @@ class UniversityCampus(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     university = relationship("University", back_populates="campuses")
+    programmes = relationship("Programme", back_populates="campus")
