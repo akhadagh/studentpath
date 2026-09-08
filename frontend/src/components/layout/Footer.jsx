@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { FiMail, FiPhone, FiMapPin } from 'react-icons/fi'
 
 export default function Footer() {
   return (
@@ -12,36 +13,50 @@ export default function Footer() {
               </div>
               <span className="text-xl font-bold text-white">StudentPath</span>
             </div>
-            <p className="text-sm text-slate-400">
-              Your personalised guide from career to programme to university to future.
+            <p className="text-sm text-slate-400 leading-relaxed">
+              Your personalised guide from career to programme to university to future. Free for every Ghanaian student.
             </p>
           </div>
           <div>
             <h3 className="text-white font-semibold mb-3">Platform</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/explore" className="hover:text-white transition">Explore Careers</Link></li>
+              <li><Link to="/explore/universities" className="hover:text-white transition">Universities</Link></li>
+              <li><Link to="/explore/programmes" className="hover:text-white transition">Programmes</Link></li>
               <li><Link to="/assessment" className="hover:text-white transition">Take Assessment</Link></li>
+              <li><Link to="/eligibility" className="hover:text-white transition">Eligibility Checker</Link></li>
               <li><Link to="/dashboard" className="hover:text-white transition">Dashboard</Link></li>
             </ul>
           </div>
           <div>
-            <h3 className="text-white font-semibold mb-3">Resources</h3>
+            <h3 className="text-white font-semibold mb-3">Company</h3>
             <ul className="space-y-2 text-sm">
-              <li><a href="#" className="hover:text-white transition">About Us</a></li>
+              <li><Link to="/about" className="hover:text-white transition">About Us</Link></li>
+              <li><Link to="/contact" className="hover:text-white transition">Contact</Link></li>
               <li><a href="#" className="hover:text-white transition">Privacy Policy</a></li>
               <li><a href="#" className="hover:text-white transition">Terms of Service</a></li>
             </ul>
           </div>
           <div>
             <h3 className="text-white font-semibold mb-3">Contact</h3>
-            <ul className="space-y-2 text-sm">
-              <li>support@studentpath.app</li>
-              <li>Accra, Ghana</li>
+            <ul className="space-y-3 text-sm">
+              <li className="flex items-start gap-2">
+                <FiMail className="w-4 h-4 mt-0.5 text-primary-400" />
+                <span>boamahjoshua60@gmail.com</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <FiPhone className="w-4 h-4 mt-0.5 text-primary-400" />
+                <span>+233 558 727 542</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <FiMapPin className="w-4 h-4 mt-0.5 text-primary-400" />
+                <span>Ghana, West Africa</span>
+              </li>
             </ul>
           </div>
         </div>
-        <div className="border-t border-slate-700 mt-8 pt-8 text-center text-sm text-slate-400">
-          &copy; {new Date().getFullYear()} StudentPath. All rights reserved.
+        <div className="border-t border-slate-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-400">
+          <p>&copy; {new Date().getFullYear()} StudentPath. All rights reserved.</p>
+          <p>Built with ❤ for Ghanaian students</p>
         </div>
       </div>
     </footer>

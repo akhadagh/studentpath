@@ -15,6 +15,8 @@ import ProgrammeSearch from './pages/ProgrammeSearch';
 import ProgrammeDetail from './pages/ProgrammeDetail';
 import EligibilityChecker from './pages/EligibilityChecker';
 import Admin from './pages/Admin';
+import About from './pages/About';
+import Contact from './pages/Contact';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -53,6 +55,8 @@ function App() {
           <Route path="/results" element={<ProtectedRoute><Results /></ProtectedRoute>} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </main>

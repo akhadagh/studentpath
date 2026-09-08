@@ -51,6 +51,9 @@ export default function Navbar() {
               )}
             </div>
 
+            <Link to="/about" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-primary-600 hover:bg-slate-50 transition">About</Link>
+            <Link to="/contact" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-primary-600 hover:bg-slate-50 transition">Contact</Link>
+
             {user ? (
               <>
                 <Link to="/dashboard" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-primary-600 hover:bg-slate-50 transition">Dashboard</Link>
@@ -78,6 +81,8 @@ export default function Navbar() {
             <Link to="/explore/universities" onClick={() => setMobileOpen(false)} className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg">Universities</Link>
             <Link to="/explore/programmes" onClick={() => setMobileOpen(false)} className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg">Programmes</Link>
             <Link to="/eligibility" onClick={() => setMobileOpen(false)} className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg">Eligibility Check</Link>
+            <Link to="/about" onClick={() => setMobileOpen(false)} className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg">About</Link>
+            <Link to="/contact" onClick={() => setMobileOpen(false)} className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg">Contact</Link>
             {user ? (
               <>
                 <Link to="/dashboard" onClick={() => setMobileOpen(false)} className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg">Dashboard</Link>
