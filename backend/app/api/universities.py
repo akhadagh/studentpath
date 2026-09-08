@@ -73,7 +73,7 @@ async def list_regions(db: AsyncSession = Depends(get_db)):
     return {"regions": sorted(regions)}
 
 
-@router.get("/{university_id}", response_model=UniversityDetailResponse)
+@router.get("/{university_id}")
 async def get_university(
     university_id: int,
     db: AsyncSession = Depends(get_db),
@@ -91,14 +91,33 @@ async def get_university(
     )
     campuses = campuses_result.scalars().all()
 
-    campus_data = [
-        {"id": c.id, "campus_name": c.campus_name, "location": c.location, "city": c.city, "region": c.region}
-        for c in campuses
-    ]
+    prog_count_result = await db.execute(
+        select(func.count(Programme.id)).where(Programme.university_id == university.id)
+    )
+    prog_count = prog_count_result.scalar() or 0
 
-    response = UniversityDetailResponse.model_validate(university)
-    response.campuses = [CampusResponse(**c) for c in campus_data]
-    return response
+    return {
+        "id": university.id,
+        "name": university.name,
+        "short_name": university.short_name,
+        "institution_type": university.institution_type,
+        "ownership_type": university.ownership_type,
+        "region": university.region,
+        "city": university.city,
+        "official_website": university.official_website,
+        "admissions_website": university.admissions_website,
+        "description": university.description,
+        "accreditation": university.accreditation,
+        "logo_url": university.logo_url,
+        "contact_email": university.contact_email,
+        "contact_phone": university.contact_phone,
+        "verification_status": university.verification_status,
+        "programme_count": prog_count,
+        "campuses": [
+            {"id": c.id, "campus_name": c.campus_name, "location": c.location, "city": c.city, "region": c.region}
+            for c in campuses
+        ],
+    }
 
 
 @router.get("/{university_id}/programmes")
