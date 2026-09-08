@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 from datetime import datetime
 
 
@@ -19,23 +19,21 @@ class AssessmentResponse(BaseModel):
 
 
 class CareerMatch(BaseModel):
-    career: str
-    category: str
+    cluster_key: str
+    cluster_name: str
     match_percentage: float
-    description: str
-    required_skills: List[str]
-    salary_range: str
-    growth_outlook: str
-    related_programmes: List[str]
+    explanation: str
+    careers: List[dict]
 
 
 class ProgrammeRecommendation(BaseModel):
-    programme: str
+    programme_id: Optional[int] = None
+    programme_name: str
     field: str
     relevance_score: float
-    duration_years: int
-    universities: List[str]
-    description: str
+    university_id: Optional[int] = None
+    duration_years: Optional[int] = None
+    degree_type: Optional[str] = None
 
 
 class ResultResponse(BaseModel):
@@ -43,7 +41,9 @@ class ResultResponse(BaseModel):
     assessment_id: int
     top_matches: List[CareerMatch]
     programme_recommendations: List[ProgrammeRecommendation]
-    career_paths: List[dict]
+    career_paths: Dict[str, float]
+    cluster_scores: Optional[Dict[str, float]] = None
+    explanations: Optional[Dict[str, str]] = None
     completed_at: datetime
 
     class Config:

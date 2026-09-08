@@ -1,363 +1,253 @@
-from typing import Dict, List, Tuple
+"""
+StudentPath Assessment Scoring Engine v2.
+Uses career clusters from the database and connects to real programmes.
+"""
+from typing import Dict, List, Tuple, Optional
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
+
+from app.models.career import CareerCluster, Career
+from app.models.programme_v2 import Programme
 
 
-CAREER_CATEGORIES = {
-    "technology": {
-        "name": "Technology & Computing",
-        "keywords": ["technology", "computing", "software", "data", "cyber", "ai", "automation", "digital"],
-        "careers": [
-            {
-                "name": "Software Engineering",
-                "description": "Design, build, and maintain software systems",
-                "skills": ["Problem-solving", "Programming", "Logic", "Creativity"],
-                "salary": "GHS 5,000 - 25,000/month",
-                "growth": "High demand globally",
-            },
-            {
-                "name": "Data Science & Analytics",
-                "description": "Extract insights from data to drive decisions",
-                "skills": ["Statistics", "Programming", "Critical thinking", "Visualization"],
-                "salary": "GHS 6,000 - 30,000/month",
-                "growth": "Rapidly growing",
-            },
-            {
-                "name": "Cybersecurity",
-                "description": "Protect systems and data from digital threats",
-                "skills": ["Analytical thinking", "Networking", "Attention to detail", "Problem-solving"],
-                "salary": "GHS 7,000 - 35,000/month",
-                "growth": "Critical shortage globally",
-            },
-        ],
-    },
-    "healthcare": {
-        "name": "Healthcare & Medicine",
-        "keywords": ["health", "medicine", "care", "biological", "medical", "wellness", "anatomy"],
-        "careers": [
-            {
-                "name": "Medicine & Surgery",
-                "description": "Diagnose and treat illnesses and injuries",
-                "skills": ["Empathy", "Science", "Communication", "Resilience"],
-                "salary": "GHS 8,000 - 40,000/month",
-                "growth": "Always in demand",
-            },
-            {
-                "name": "Pharmacy",
-                "description": "Prepare and dispense medications safely",
-                "skills": ["Chemistry", "Attention to detail", "Communication", "Ethics"],
-                "salary": "GHS 4,000 - 15,000/month",
-                "growth": "Steady demand",
-            },
-            {
-                "name": "Nursing & Midwifery",
-                "description": "Provide direct patient care and health education",
-                "skills": ["Compassion", "Communication", "Physical stamina", "Teamwork"],
-                "salary": "GHS 3,500 - 12,000/month",
-                "growth": "High demand in Ghana",
-            },
-        ],
-    },
-    "business": {
-        "name": "Business & Finance",
-        "keywords": ["business", "finance", "management", "entrepreneur", "marketing", "accounting", "trade"],
-        "careers": [
-            {
-                "name": "Business Management",
-                "description": "Plan, direct, and coordinate business operations",
-                "skills": ["Leadership", "Communication", "Strategic thinking", "Numeracy"],
-                "salary": "GHS 4,000 - 20,000/month",
-                "growth": "Strong local demand",
-            },
-            {
-                "name": "Finance & Accounting",
-                "description": "Manage financial records and advise on financial health",
-                "skills": ["Numeracy", "Analytical thinking", "Ethics", "Attention to detail"],
-                "salary": "GHS 4,500 - 22,000/month",
-                "growth": "Consistent demand",
-            },
-            {
-                "name": "Marketing & Digital Media",
-                "description": "Promote products and build brand awareness",
-                "skills": ["Creativity", "Communication", "Data analysis", "Persuasion"],
-                "salary": "GHS 3,000 - 18,000/month",
-                "growth": "Growing with digital economy",
-            },
-        ],
-    },
-    "engineering": {
-        "name": "Engineering & Built Environment",
-        "keywords": ["engineering", "construction", "build", "design", "infrastructure", "mechanical", "electrical"],
-        "careers": [
-            {
-                "name": "Civil Engineering",
-                "description": "Design and oversee construction of infrastructure projects",
-                "skills": ["Mathematics", "Problem-solving", "Project management", "Spatial awareness"],
-                "salary": "GHS 5,000 - 25,000/month",
-                "growth": "High infrastructure investment in Ghana",
-            },
-            {
-                "name": "Electrical Engineering",
-                "description": "Design and maintain electrical systems and equipment",
-                "skills": ["Physics", "Technical skills", "Problem-solving", "Attention to detail"],
-                "salary": "GHS 5,000 - 22,000/month",
-                "growth": "Growing with energy sector",
-            },
-            {
-                "name": "Mechanical Engineering",
-                "description": "Design and manufacture mechanical systems",
-                "skills": ["Physics", "Mathematics", "Design thinking", "Hands-on skills"],
-                "salary": "GHS 4,500 - 20,000/month",
-                "growth": "Steady demand",
-            },
-        ],
-    },
-    "law": {
-        "name": "Law & Social Sciences",
-        "keywords": ["law", "legal", "social", "policy", "governance", "justice", "rights", "politics"],
-        "careers": [
-            {
-                "name": "Law (LLB)",
-                "description": "Advise clients and represent them in legal matters",
-                "skills": ["Analytical thinking", "Communication", "Research", "Ethics"],
-                "salary": "GHS 5,000 - 30,000/month",
-                "growth": "Strong demand",
-            },
-            {
-                "name": "Political Science & International Relations",
-                "description": "Analyze political systems and global affairs",
-                "skills": ["Research", "Critical thinking", "Communication", "Writing"],
-                "salary": "GHS 3,000 - 15,000/month",
-                "growth": "Government and NGO demand",
-            },
-            {
-                "name": "Social Work & Community Development",
-                "description": "Support communities and vulnerable populations",
-                "skills": ["Empathy", "Communication", "Problem-solving", "Cultural awareness"],
-                "salary": "GHS 2,500 - 10,000/month",
-                "growth": "Growing NGO sector",
-            },
-        ],
-    },
-    "education": {
-        "name": "Education & Humanities",
-        "keywords": ["education", "teaching", "language", "history", "literature", "culture", "humanities"],
-        "careers": [
-            {
-                "name": "Teaching & Education",
-                "description": "Educate and inspire the next generation",
-                "skills": ["Communication", "Patience", "Creativity", "Organization"],
-                "salary": "GHS 2,500 - 10,000/month",
-                "growth": "Consistent national need",
-            },
-            {
-                "name": "Languages & Translation",
-                "description": "Facilitate cross-cultural communication",
-                "skills": ["Language fluency", "Cultural awareness", "Attention to detail"],
-                "salary": "GHS 3,000 - 12,000/month",
-                "growth": "Growing with global business",
-            },
-            {
-                "name": "Journalism & Media",
-                "description": "Inform the public through various media channels",
-                "skills": ["Writing", "Communication", "Research", "Creativity"],
-                "salary": "GHS 2,500 - 12,000/month",
-                "growth": "Digital media expansion",
-            },
-        ],
-    },
-    "agriculture": {
-        "name": "Agriculture & Natural Resources",
-        "keywords": ["agriculture", "farming", "environment", "nature", "food", "sustainability", "agricultural"],
-        "careers": [
-            {
-                "name": "Agricultural Science",
-                "description": "Improve crop production and farming methods",
-                "skills": ["Science", "Practical skills", "Problem-solving", "Environmental awareness"],
-                "salary": "GHS 3,000 - 15,000/month",
-                "growth": "Key sector for Ghana's economy",
-            },
-            {
-                "name": "Environmental Science",
-                "description": "Protect and manage natural resources",
-                "skills": ["Science", "Research", "Data analysis", "Communication"],
-                "salary": "GHS 3,500 - 14,000/month",
-                "growth": "Growing environmental focus",
-            },
-        ],
-    },
-}
-
-
+# Assessment question structure with weights
 ASSESSMENT_QUESTIONS = {
     "interests": {
         "question": "Which activities do you enjoy most?",
+        "weight": 0.35,
         "options": {
-            1: "Solving technical problems and working with technology",
-            2: "Helping and caring for other people",
-            3: "Managing projects and leading teams",
-            4: "Designing and building things",
-            5: "Research and analyzing information",
-            6: "Teaching and sharing knowledge",
-            7: "Working with nature and the environment",
-            8: "Creative expression and communication",
+            1: {"label": "Solving technical problems and working with technology", "clusters": ["technology"]},
+            2: {"label": "Helping and caring for other people", "clusters": ["healthcare", "social"]},
+            3: {"label": "Managing projects and leading teams", "clusters": ["business"]},
+            4: {"label": "Designing and building things", "clusters": ["engineering", "creative"]},
+            5: {"label": "Research and analyzing information", "clusters": ["science"]},
+            6: {"label": "Teaching and sharing knowledge", "clusters": ["education"]},
+            7: {"label": "Working with nature and the environment", "clusters": ["environment"]},
+            8: {"label": "Creative expression and communication", "clusters": ["creative", "social"]},
         },
     },
     "strengths": {
         "question": "What are you best at in school?",
+        "weight": 0.25,
         "options": {
-            1: "Mathematics and Computer Science",
-            2: "Science (Biology, Chemistry, Physics)",
-            3: "Business Studies and Economics",
-            4: "Technical and Vocational subjects",
-            5: "Social Sciences and Humanities",
-            6: "Languages and Communication",
-            7: "Agriculture and Environmental Studies",
-            8: "Arts and Creative subjects",
+            1: {"label": "Mathematics and Computer Science", "clusters": ["technology", "science"]},
+            2: {"label": "Science (Biology, Chemistry, Physics)", "clusters": ["science", "healthcare"]},
+            3: {"label": "Business Studies and Economics", "clusters": ["business"]},
+            4: {"label": "Technical and Vocational subjects", "clusters": ["engineering"]},
+            5: {"label": "Social Sciences and Humanities", "clusters": ["law", "social"]},
+            6: {"label": "Languages and Communication", "clusters": ["education", "creative"]},
+            7: {"label": "Agriculture and Environmental Studies", "clusters": ["environment"]},
+            8: {"label": "Arts and Creative subjects", "clusters": ["creative"]},
         },
     },
     "work_style": {
         "question": "How do you prefer to work?",
+        "weight": 0.15,
         "options": {
-            1: "Independently with computers and technology",
-            2: "In teams, directly helping others",
-            3: "In leadership roles, making decisions",
-            4: "Hands-on, building or fixing things",
-            5: "Analyzing data and finding patterns",
-            6: "In educational settings, sharing knowledge",
-            7: "Outdoors, working with nature",
-            8: "In creative, flexible environments",
+            1: {"label": "Independently with computers and technology", "clusters": ["technology"]},
+            2: {"label": "In teams, directly helping others", "clusters": ["healthcare", "social"]},
+            3: {"label": "In leadership roles, making decisions", "clusters": ["business", "law"]},
+            4: {"label": "Hands-on, building or fixing things", "clusters": ["engineering"]},
+            5: {"label": "Analyzing data and finding patterns", "clusters": ["science", "technology"]},
+            6: {"label": "In educational settings, sharing knowledge", "clusters": ["education"]},
+            7: {"label": "Outdoors, working with nature", "clusters": ["environment"]},
+            8: {"label": "In creative, flexible environments", "clusters": ["creative"]},
         },
     },
     "values": {
         "question": "What matters most to you in a career?",
+        "weight": 0.10,
         "options": {
-            1: "High income and financial security",
-            2: "Making a difference in people's lives",
-            3: "Status and professional recognition",
-            4: "Job stability and benefits",
-            5: "Intellectual challenge and growth",
-            6: "Work-life balance",
-            7: "Working in a growing industry",
-            8: "Creative freedom and independence",
+            1: {"label": "High income and financial security", "clusters": ["technology", "business"]},
+            2: {"label": "Making a difference in people's lives", "clusters": ["healthcare", "social"]},
+            3: {"label": "Status and professional recognition", "clusters": ["law", "healthcare"]},
+            4: {"label": "Job stability and benefits", "clusters": ["education", "engineering"]},
+            5: {"label": "Intellectual challenge and growth", "clusters": ["science", "technology"]},
+            6: {"label": "Work-life balance", "clusters": ["education", "social"]},
+            7: {"label": "Working in a growing industry", "clusters": ["technology", "engineering"]},
+            8: {"label": "Creative freedom and independence", "clusters": ["creative"]},
         },
     },
     "challenges": {
         "question": "What type of challenges energize you?",
+        "weight": 0.05,
         "options": {
-            1: "Debugging complex code or systems",
-            2: "Diagnosing and treating health conditions",
-            3: "Negotiating deals or solving business problems",
-            4: "Engineering solutions to infrastructure problems",
-            5: "Legal research and argumentation",
-            6: "Designing curricula and educating others",
-            7: "Addressing environmental or food security issues",
-            8: "Creating compelling content or designs",
+            1: {"label": "Debugging complex code or systems", "clusters": ["technology"]},
+            2: {"label": "Diagnosing and treating health conditions", "clusters": ["healthcare"]},
+            3: {"label": "Negotiating deals or solving business problems", "clusters": ["business"]},
+            4: {"label": "Engineering solutions to infrastructure problems", "clusters": ["engineering"]},
+            5: {"label": "Legal research and argumentation", "clusters": ["law"]},
+            6: {"label": "Designing curricula and educating others", "clusters": ["education"]},
+            7: {"label": "Addressing environmental or food security issues", "clusters": ["environment"]},
+            8: {"label": "Creating compelling content or designs", "clusters": ["creative"]},
         },
     },
     "future": {
         "question": "Where do you see yourself in 10 years?",
+        "weight": 0.10,
         "options": {
-            1: "Leading a tech company or startup",
-            2: "Working in a hospital or health organization",
-            3: "Running my own business",
-            4: "Managing major construction or engineering projects",
-            5: "Practicing law or working in policy",
-            6: "Teaching at a university or leading an educational institution",
-            7: "Working on sustainable development projects",
-            8: "Working in media, arts, or cultural organizations",
+            1: {"label": "Leading a tech company or startup", "clusters": ["technology"]},
+            2: {"label": "Working in a hospital or health organization", "clusters": ["healthcare"]},
+            3: {"label": "Running my own business", "clusters": ["business"]},
+            4: {"label": "Managing major construction or engineering projects", "clusters": ["engineering"]},
+            5: {"label": "Practicing law or working in policy", "clusters": ["law"]},
+            6: {"label": "Teaching at a university or leading an educational institution", "clusters": ["education"]},
+            7: {"label": "Working on sustainable development projects", "clusters": ["environment"]},
+            8: {"label": "Working in media, arts, or cultural organizations", "clusters": ["creative"]},
         },
     },
 }
 
-
-CATEGORY_QUESTION_MAP = {
-    1: "technology",
-    2: "healthcare",
-    3: "business",
-    4: "engineering",
-    5: "law",
-    6: "education",
-    7: "agriculture",
-    8: "business",
+# Grade to points mapping for WASSCE
+GRADE_POINTS = {
+    "A1": 1,
+    "B2": 2,
+    "B3": 3,
+    "C4": 4,
+    "C5": 5,
+    "C6": 6,
+    "D7": 7,
+    "E8": 8,
+    "F9": 9,
 }
 
 
-def calculate_scores(answers: Dict[str, int]) -> Dict[str, float]:
-    category_scores: Dict[str, float] = {cat: 0.0 for cat in CAREER_CATEGORIES}
-    question_weights = {
-        "interests": 1.5,
-        "strengths": 1.3,
-        "work_style": 1.2,
-        "values": 1.0,
-        "challenges": 1.1,
-        "future": 1.4,
-    }
+def calculate_scores(answers: Dict[str, int]) -> Tuple[Dict[str, float], Dict[str, str]]:
+    """
+    Calculate career cluster scores from assessment answers.
+    Returns (scores_dict, explanations_dict).
+    """
+    cluster_scores: Dict[str, float] = {}
+    cluster_evidence: Dict[str, List[str]] = {}
 
     for question_key, answer_value in answers.items():
-        if question_key in CATEGORY_QUESTION_MAP:
-            primary_category = CATEGORY_QUESTION_MAP[answer_value]
-            weight = question_weights.get(question_key, 1.0)
-            category_scores[primary_category] += weight * 20
+        if question_key not in ASSESSMENT_QUESTIONS:
+            continue
 
-            for cat, cat_data in CAREER_CATEGORIES.items():
-                if cat != primary_category:
-                    if any(
-                        kw in CAREER_CATEGORIES[primary_category]["name"].lower()
-                        for kw in cat_data["keywords"]
-                    ):
-                        category_scores[cat] += weight * 5
+        question = ASSESSMENT_QUESTIONS[question_key]
+        weight = question["weight"]
+        option = question["options"].get(answer_value)
 
-    max_score = max(category_scores.values()) if category_scores.values() else 1
-    if max_score > 0:
-        for cat in category_scores:
-            category_scores[cat] = min(round((category_scores[cat] / max_score) * 100, 1), 100)
+        if not option:
+            continue
 
-    return category_scores
+        for cluster_key in option["clusters"]:
+            if cluster_key not in cluster_scores:
+                cluster_scores[cluster_key] = 0.0
+                cluster_evidence[cluster_key] = []
+
+            cluster_scores[cluster_key] += weight * 20
+            cluster_evidence[cluster_key].append(f"{question['question']}: {option['label']}")
+
+    # Normalise to 0-100
+    if cluster_scores:
+        max_score = max(cluster_scores.values())
+        if max_score > 0:
+            for key in cluster_scores:
+                cluster_scores[key] = min(round((cluster_scores[key] / max_score) * 100, 1), 100)
+
+    # Generate explanations
+    explanations = {}
+    for cluster_key, evidence in cluster_evidence.items():
+        top_evidence = evidence[:3]
+        explanations[cluster_key] = (
+            f"Your answers strongly indicated interest and aptitude in this area. "
+            f"Key indicators: {'; '.join(top_evidence)}."
+        )
+
+    return cluster_scores, explanations
 
 
-def get_top_matches(
-    scores: Dict[str, float], top_n: int = 3
+async def get_top_matches(
+    scores: Dict[str, float],
+    explanations: Dict[str, str],
+    db: AsyncSession,
+    top_n: int = 3,
 ) -> List[dict]:
-    sorted_categories = sorted(scores.items(), key=lambda x: x[1], reverse=True)[:top_n]
+    """Get top career cluster matches with careers from database."""
+    sorted_clusters = sorted(scores.items(), key=lambda x: x[1], reverse=True)[:top_n]
     matches = []
 
-    for category, score in sorted_categories:
-        cat_data = CAREER_CATEGORIES[category]
-        top_career = cat_data["careers"][0]
-        matches.append(
-            {
-                "career": top_career["name"],
-                "category": cat_data["name"],
-                "match_percentage": score,
-                "description": top_career["description"],
-                "required_skills": top_career["skills"],
-                "salary_range": top_career["salary"],
-                "growth_outlook": top_career["growth"],
-                "related_programmes": cat_data["careers"],
-            }
+    for cluster_key, score in sorted_clusters:
+        result = await db.execute(
+            select(CareerCluster).where(CareerCluster.key == cluster_key)
         )
+        cluster = result.scalar_one_or_none()
+        if not cluster:
+            continue
+
+        careers_result = await db.execute(
+            select(Career).where(Career.cluster_id == cluster.id).limit(3)
+        )
+        careers = careers_result.scalars().all()
+
+        matches.append({
+            "cluster_key": cluster.key,
+            "cluster_name": cluster.name,
+            "match_percentage": score,
+            "explanation": explanations.get(cluster_key, ""),
+            "careers": [
+                {
+                    "name": c.name,
+                    "description": c.description,
+                    "skills": c.skills,
+                    "salary_range": c.salary_range,
+                    "growth_outlook": c.growth_outlook,
+                }
+                for c in careers
+            ],
+        })
 
     return matches
 
 
-def get_programme_recommendations(
-    scores: Dict[str, float], top_n: int = 6
+async def get_programme_recommendations(
+    scores: Dict[str, float],
+    db: AsyncSession,
+    top_n: int = 6,
 ) -> List[dict]:
+    """Get programme recommendations based on cluster scores, querying real DB data."""
+    sorted_clusters = sorted(scores.items(), key=lambda x: x[1], reverse=True)[:5]
     all_programmes = []
-    for category, score in scores.items():
-        if score < 20:
-            continue
-        cat_data = CAREER_CATEGORIES[category]
-        for career in cat_data["careers"]:
-            all_programmes.append(
-                {
-                    "programme": f"{career['name']}",
-                    "field": cat_data["name"],
-                    "relevance_score": round(score * 0.9, 1),
-                    "duration_years": 4,
-                    "universities": ["University of Ghana", "KNUST", "UG", "GIMPA"],
-                    "description": career["description"],
-                }
-            )
 
-    all_programmes.sort(key=lambda x: x["relevance_score"], reverse=True)
-    return all_programmes[:top_n]
+    for cluster_key, score in sorted_clusters:
+        if score < 15:
+            continue
+
+        result = await db.execute(
+            select(CareerCluster).where(CareerCluster.key == cluster_key)
+        )
+        cluster = result.scalar_one_or_none()
+        if not cluster:
+            continue
+
+        # Find programmes related to this cluster
+        progs_result = await db.execute(
+            select(Programme).where(
+                Programme.career_cluster_keys.ilike(f"%{cluster_key}%"),
+                Programme.active_status == True,
+            ).limit(4)
+        )
+        programmes = progs_result.scalars().all()
+
+        for prog in programmes:
+            all_programmes.append({
+                "programme_id": prog.id,
+                "programme_name": prog.name,
+                "field": cluster.name,
+                "relevance_score": round(score * 0.9, 1),
+                "university_id": prog.university_id,
+                "duration_years": prog.duration_years,
+                "degree_type": prog.degree_type,
+            })
+
+    # Sort by relevance and deduplicate
+    seen = set()
+    unique_programmes = []
+    for p in sorted(all_programmes, key=lambda x: x["relevance_score"], reverse=True):
+        key = (p["programme_name"], p["university_id"])
+        if key not in seen:
+            seen.add(key)
+            unique_programmes.append(p)
+
+    return unique_programmes[:top_n]

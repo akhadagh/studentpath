@@ -20,7 +20,13 @@ router = APIRouter()
 
 @router.get("/questions")
 async def get_assessment_questions():
-    return {"questions": ASSESSMENT_QUESTIONS, "total_steps": len(ASSESSMENT_QUESTIONS)}
+    questions = {}
+    for key, q in ASSESSMENT_QUESTIONS.items():
+        questions[key] = {
+            "question": q["question"],
+            "options": {k: v["label"] for k, v in q["options"].items()},
+        }
+    return {"questions": questions, "total_steps": len(ASSESSMENT_QUESTIONS)}
 
 
 @router.post("/start", response_model=AssessmentResponse)
@@ -46,7 +52,7 @@ async def start_assessment(
     return AssessmentResponse.model_validate(assessment)
 
 
-@router.post("/{assessment_id}/submit", response_model=AssessmentResponse)
+@router.post("/{assessment_id}/submit", response_model=ResultResponse)
 async def submit_assessment(
     assessment_id: int,
     submission: AssessmentSubmit,
@@ -71,9 +77,9 @@ async def submit_assessment(
     assessment.status = "completed"
     assessment.completed_at = datetime.now(timezone.utc)
 
-    scores = calculate_scores(submission.answers)
-    top_matches = get_top_matches(scores)
-    programme_recs = get_programme_recommendations(scores)
+    scores, explanations = calculate_scores(submission.answers)
+    top_matches = await get_top_matches(scores, explanations, db)
+    programme_recs = await get_programme_recommendations(scores, db)
 
     new_result = Result(
         user_id=current_user.id,
@@ -81,9 +87,11 @@ async def submit_assessment(
         top_matches=top_matches,
         programme_recommendations=programme_recs,
         career_paths=scores,
+        cluster_scores=scores,
+        explanations=explanations,
     )
     db.add(new_result)
     await db.commit()
-    await db.refresh(assessment)
+    await db.refresh(new_result)
 
-    return AssessmentResponse.model_validate(assessment)
+    return ResultResponse.model_validate(new_result)
