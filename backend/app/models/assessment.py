@@ -1,5 +1,6 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, JSON, Float, func
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, JSON
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 from app.core.database import Base
 
 
@@ -28,6 +29,8 @@ class Result(Base):
     top_matches = Column(JSON, default=list)
     programme_recommendations = Column(JSON, default=list)
     career_paths = Column(JSON, default=list)
+    cluster_scores = Column(JSON, default=dict)
+    explanations = Column(JSON, default=dict)
     completed_at = Column(DateTime(timezone=True), server_default=func.now())
 
     user = relationship("User", back_populates="results")

@@ -10,6 +10,8 @@ from app.core.config import settings
 from app.core.database import engine, Base
 from app.api import auth, assessment, results, programmes
 
+import app.models
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
