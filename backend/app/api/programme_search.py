@@ -11,7 +11,7 @@ router = APIRouter()
 
 @router.get("/search")
 async def search_programmes(
-    q: str = Query(None, description="Search query"),
+    search: str = Query(None, description="Search query"),
     university_id: int = Query(None),
     institution_type: str = Query(None),
     region: str = Query(None),
@@ -32,13 +32,13 @@ async def search_programmes(
         .where(Programme.active_status == True)
     )
 
-    if q:
+    if search:
         query = query.where(
             or_(
-                Programme.name.ilike(f"%{q}%"),
-                Programme.normalised_name.ilike(f"%{q}%"),
-                Programme.faculty.ilike(f"%{q}%"),
-                Programme.department.ilike(f"%{q}%"),
+                Programme.name.ilike(f"%{search}%"),
+                Programme.normalised_name.ilike(f"%{search}%"),
+                Programme.faculty.ilike(f"%{search}%"),
+                Programme.department.ilike(f"%{search}%"),
             )
         )
     if university_id:
