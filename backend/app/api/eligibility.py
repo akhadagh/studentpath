@@ -155,7 +155,7 @@ async def check_eligibility(
             programme_id=check.programme_id,
             programme_name=programme.name,
             status=status,
-            meets_requirements=met,
+            meets_requirements=meets,
             message=message,
             details={
                 "met": met,
